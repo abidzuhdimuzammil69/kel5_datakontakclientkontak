@@ -1,3 +1,4 @@
+// File: src/api/KontakApiClient.java
 package api;
 
 import java.net.URI;
@@ -10,57 +11,50 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import model.Mahasiswa;
+import model.Kontak;
 
-public class MahasiswaApiClient {
-    private static final String BASE_URL = "http://localhost/application-tier-php/public/mahasiswa";
+public class KontakApiClient {
+    private static final String BASE_URL = "http://localhost/application-tier-php/public/kontak";
     private final HttpClient client = HttpClient.newHttpClient();
     private final Gson gson = new Gson();
 
-    public List<Mahasiswa> findAll() throws Exception {
+    public List<Kontak> findAll() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        ApiResponse<List<Mahasiswa>> apiResp = gson.fromJson(response.body(),
-                new TypeToken<ApiResponse<List<Mahasiswa>>>() {
+        ApiResponse<List<Kontak>> apiResp = gson.fromJson(response.body(),
+                new TypeToken<ApiResponse<List<Kontak>>>() {
                 }.getType());
         if (!apiResp.success)
             throw new Exception(apiResp.message);
         return apiResp.data;
     }
 
-    public void create(Mahasiswa m) throws Exception {
-        String json = gson.toJson(m);
+    public void create(Kontak kontak) throws Exception {
+        String json = gson.toJson(kontak);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new RuntimeException("HTTP " + response.statusCode() + ": " + extractErrorMessage(response.body()));
-        }
-        System.out.println("Raw response:\n" + response.body());
-        ApiResponse<?> apiResp = gson.fromJson(response.body(), ApiResponse.class);
-        if (!apiResp.success)
-            throw new Exception(apiResp.message);
+        handleResponse(response);
     }
 
-    public void update(Mahasiswa m) throws Exception {
+    public void update(Kontak kontak) throws Exception {
         var requestBody = new HashMap<String, Object>();
-        requestBody.put("nim", m.getNim());
-        requestBody.put("nama", m.getNama());
-        requestBody.put("jurusan", m.getJurusan() != null ? m.getJurusan() : null);
+        requestBody.put("nama", kontak.getNama());
+        requestBody.put("telepon", kontak.getTelepon());
+        requestBody.put("email", kontak.getEmail() != null ? kontak.getEmail() : null);
         String json = gson.toJson(requestBody);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/" + m.getId()))
+                .uri(URI.create(BASE_URL + "/" + kontak.getId()))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("Raw response:\n" + response.body());
         handleResponse(response);
     }
 
@@ -70,7 +64,6 @@ public class MahasiswaApiClient {
                 .DELETE()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("Raw response:\n" + response.body());
         handleResponse(response);
     }
 
@@ -80,7 +73,7 @@ public class MahasiswaApiClient {
         String message;
     }
 
-    private void handleResponse(HttpResponse<String> response) throws Exception{
+    private void handleResponse(HttpResponse<String> response) throws Exception {
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
             throw new RuntimeException("HTTP " + response.statusCode() + ": " + extractErrorMessage(response.body()));
         }

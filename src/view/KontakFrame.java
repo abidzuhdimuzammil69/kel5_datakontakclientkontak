@@ -1,3 +1,4 @@
+// File: src/view/KontakFrame.java
 package view;
 
 import java.awt.Dimension;
@@ -14,36 +15,36 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
-import view.tablemodel.MahasiswaTableModel;
+import view.tablemodel.KontakTableModel;
 
-public class MahasiswaFrame extends JFrame {
+public class KontakFrame extends JFrame {
 
     private final JTextField searchField = new JTextField(30);
-    private final JButton addButton = new JButton("Add New");
+    private final JButton addButton = new JButton("Tambah Kontak");
     private final JButton refreshButton = new JButton("Refresh");
-    private final JButton deleteButton = new JButton("Delete");
-    private final JLabel totalRecordsLabel = new JLabel("0 Records");
+    private final JButton deleteButton = new JButton("Hapus");
+    private final JLabel totalRecordsLabel = new JLabel("0 Kontak");
 
-    private final JTable mahasiswaTable = new JTable();
-    private final MahasiswaTableModel mahasiswaTableModel = new MahasiswaTableModel();
+    private final JTable kontakTable = new JTable();
+    private final KontakTableModel kontakTableModel = new KontakTableModel();
     private final JProgressBar progressBar = new JProgressBar();
 
-    public MahasiswaFrame() {
+    public KontakFrame() {
         initializeUI();        
     }
 
     private void initializeUI(){
-        setTitle("EduCore - Management Mahasiswa");
+        setTitle("Kontak Manager - Aplikasi Manajemen Kontak");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[]10[]10[grow]10[]10[]"));
 
-        mahasiswaTable.setModel(mahasiswaTableModel);
+        kontakTable.setModel(kontakTableModel);
         progressBar.setStringPainted(true);
 
-        add(new JLabel("List Mahasiswa"), "wrap, span 2");
+        add(new JLabel("Daftar Kontak"), "wrap, span 2");
         add(createSearchPanel(), "growx, w 80%");
         add(createButtonPanel(), "wrap, right, w 20%");
-        add(new JScrollPane(mahasiswaTable), "grow, wrap, span 2");
+        add(new JScrollPane(kontakTable), "grow, wrap, span 2");
         add(progressBar, "growx, h 20!, wrap, span 2");
         add(totalRecordsLabel, "right, span 2");
 
@@ -54,7 +55,7 @@ public class MahasiswaFrame extends JFrame {
 
     private JPanel createSearchPanel() {
         JPanel panel = new JPanel(new MigLayout(""));
-        panel.add(new JLabel("Search:"));
+        panel.add(new JLabel("Cari:"));
         panel.add(searchField, "growx");
         return panel;
     }
@@ -73,36 +74,13 @@ public class MahasiswaFrame extends JFrame {
         return panel;
     }
 
-    public JTextField getSearchField() {
-        return searchField;
-    }
-
-    public JButton getAddButton() {
-        return addButton;
-    }
-
-    public JButton getRefreshButton() {
-        return refreshButton;
-    }
-
-    public JButton getDeleteButton() {
-        return deleteButton;
-    }
-
-    public JTable getMahasiswaTable() {
-        return mahasiswaTable;
-    }
-
-    public MahasiswaTableModel getMahasiswaTableModel() {
-        return mahasiswaTableModel;
-    }
-
-    public JProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public JLabel getTotalRecordsLabel() {
-        return totalRecordsLabel;
-    }
-
+    // Getters
+    public JTextField getSearchField() { return searchField; }
+    public JButton getAddButton() { return addButton; }
+    public JButton getRefreshButton() { return refreshButton; }
+    public JButton getDeleteButton() { return deleteButton; }
+    public JTable getKontakTable() { return kontakTable; }
+    public KontakTableModel getKontakTableModel() { return kontakTableModel; }
+    public JProgressBar getProgressBar() { return progressBar; }
+    public JLabel getTotalRecordsLabel() { return totalRecordsLabel; }
 }
